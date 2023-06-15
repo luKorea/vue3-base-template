@@ -1,3 +1,4 @@
+//  使用时请设置页面 overflow: auto
 import { onMounted, onUnmounted, ref } from 'vue'
 import { throttle } from 'underscore'
 
@@ -19,7 +20,9 @@ export default function useScroll(elRef?: any) {
       scrollTop.value = el.scrollTop
       scrollHeight.value = el.scrollHeight
     }
-    if (Math.round(clientHeight.value + scrollTop.value) >= scrollHeight.value) {
+    if (
+      Math.round(clientHeight.value + scrollTop.value) >= scrollHeight.value
+    ) {
       console.log('滚动到底部了')
       // 使用后记得将值设为 false
       isReachBottom.value = true
