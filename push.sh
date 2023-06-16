@@ -6,4 +6,4 @@ pwd
 cd "$baseball" || exit
 git add .
 npm run commit
-git push
+git push origin pc:pc
