@@ -6,4 +6,4 @@ pwd
 cd "$baseball" || exit
 git add .
 npm run commit
-git push orgin mobile:mobile
+git push origin mobile:mobile
