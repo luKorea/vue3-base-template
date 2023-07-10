@@ -2,7 +2,6 @@
 const { app, protocol, BrowserWindow, globalShortcut } = require('electron')
 // 需在当前文件内开头引入 Node.js 的 'path' 模块
 const path = require('path')
-const { DEFAULT_PORT } = require('../config/index.ts')
 
 app.commandLine.appendSwitch('--ignore-certificate-errors', 'true')
 protocol.registerSchemesAsPrivileged([
@@ -18,9 +17,9 @@ const createWindow = () => {
     //窗口是否在屏幕居中. 默认值为 false
     center: true,
     //设置为 false 时可以创建一个无边框窗口 默认值为 true。
-    frame: false,
+    frame: true,
     //窗口是否在创建时显示。 默认值为 true。
-    show: true,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
@@ -32,7 +31,12 @@ const createWindow = () => {
   if (app.isPackaged) {
     win.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`)
   } else {
-    win.loadURL(`http://localhost:${DEFAULT_PORT}/`)
+    win.webContents.loadURL(`http://localhost:9999/`)
+    win.once('ready-to-show', () => {
+      setTimeout(() => {
+        win.show()
+      }, 2000)
+    })
     win.webContents.openDevTools()
   }
   globalShortcut.register('CommandOrControl+Shift+i', function () {

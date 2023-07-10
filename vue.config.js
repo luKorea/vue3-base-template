@@ -1,9 +1,9 @@
 const { defineConfig } = require('@vue/cli-service')
-const { DEFAULT_PORT } = require('./config/index.ts')
 
 module.exports = defineConfig({
   transpileDependencies: true,
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   devServer: {
-    port: DEFAULT_PORT
+    port: 9999
   }
 })
