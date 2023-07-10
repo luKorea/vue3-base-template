@@ -34,7 +34,6 @@ const createWindow = () => {
     win.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`)
   } else {
     win.loadURL(`http://localhost:${DEFAULT_PORT}/`)
-    //win.loadURL('http://localhost:5173/')
     win.webContents.openDevTools()
   }
   globalShortcut.register('CommandOrControl+Shift+i', function () {
@@ -44,9 +43,8 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow()
-
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (!BrowserWindow.getAllWindows().length) createWindow()
   })
 })
 
