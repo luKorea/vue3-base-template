@@ -5,7 +5,6 @@ const path = require('path')
 const { DEFAULT_PORT } = require('../config/index.ts')
 
 app.commandLine.appendSwitch('--ignore-certificate-errors', 'true')
-// Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
