@@ -9,7 +9,7 @@
   "description": "electron-打包",
   "build": {
     "appId": "lsl.first.app",
-    "productName": "ElectronApp",
+    "productName": "A梦+",
     "copyright": "Copyright © 2023 lsl",
     "directories": {
       "output": "dist_electron"
@@ -66,7 +66,8 @@
   },
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve | electron .",
+    "start": "vue-cli-service serve",
+    "dev": "concurrently \"wait-on http://localhost:9999 && electron .\" \"cross-env BROWSER=none npm start\"",
     "build": "vue-cli-service build",
     "build:electron": "vue-cli-service build && electron-builder",
     "lint": "vue-cli-service lint",
@@ -77,13 +78,17 @@
   "dependencies": {
     "@vueuse/core": "^10.1.2",
     "axios": "^1.2.0-alpha.1",
+    "concurrently": "^8.2.0",
     "core-js": "^3.8.3",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.8",
+    "element-plus": "^2.3.7",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.3",
     "underscore": "^1.13.6",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "wait-on": "^7.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.5",
@@ -102,13 +107,16 @@
     "cz-conventional-changelog": "^3.3.0",
     "electron": "^25.2.0",
     "electron-builder": "^24.4.0",
+    "electron-is-dev": "^2.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "husky": "^8.0.0",
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
     "prettier": "^2.8.8",
-    "typescript": "~4.5.5"
+    "typescript": "~4.5.5",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-vue-components": "^0.25.1"
   },
   "config": {
     "commitizen": {
