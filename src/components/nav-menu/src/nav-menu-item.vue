@@ -7,7 +7,7 @@
           <i v-if="item.icon" :class="item.icon" style="color： #fff"></i>
           <span>{{ item.title }}</span>
         </template>
-        <nav-menu-item :menuList="item.children"></nav-menu-item>
+        <nav-menu-item :menu-list="item.children"></nav-menu-item>
       </el-submenu>
     </template>
     <!-- 情况二：没子集的情况 -->

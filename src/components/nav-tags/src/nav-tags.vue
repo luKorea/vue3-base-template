@@ -2,15 +2,15 @@
   <div v-if="showTags" class="tag_content">
     <div style="margin: 4px">
       <el-tag
-        closable
-        size="medium"
         v-for="(tag, index) in tagsList"
         :key="tag.title"
+        closable
+        size="medium"
         :disable-transitions="true"
         :effect="isActive(tag.path) ? 'dark' : 'plain'"
+        style="margin-right: 6px; cursor: pointer"
         @close="closeTags(index)"
         @click="handleClick(tag)"
-        style="margin-right: 6px; cursor: pointer"
       >
         {{ tag.title }}
       </el-tag>
