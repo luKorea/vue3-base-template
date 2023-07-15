@@ -1,6 +1,8 @@
 import { App } from 'vue'
 
-const components: any[] = []
+import PageContent from '@/components/page-content'
+
+const components: any[] = [PageContent]
 
 export default function (app: App): void {
   for (const component of components) {
