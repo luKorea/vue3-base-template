@@ -5,15 +5,11 @@
         <nav-menu :collapse="isCollapse" />
       </el-aside>
       <el-container class="page">
-        <el-header
-          class="page-header"
-          :style="{ backgroundColor: navHeaderBgColor }"
-        >
+        <el-header class="page-header">
           <nav-header @foldChange="handleFoldChange" />
         </el-header>
-        <nav-tags></nav-tags>
+        <!-- <nav-tags></nav-tags> -->
         <el-main class="page-content">
-          <!-- <el-card> -->
           <transition
             appear
             appear-active-class="animate__animated animate__pulse"
@@ -38,6 +34,7 @@ import { ref } from 'vue'
 import NavMenu from '@/components/nav-menu'
 import NavHeader from '@/components/nav-header'
 import NavTags from '@/components/nav-tags'
+
 const isCollapse = ref(false)
 const handleFoldChange = (isFold: boolean) => {
   isCollapse.value = isFold

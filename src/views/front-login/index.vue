@@ -5,14 +5,16 @@
 </template>
 
 <script setup lang="ts">
-import { localCache } from '@/utils/localCache'
+import userStore from '@/store/module/user'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const user = userStore()
 
 function login() {
-  localCache.setCache('token', '90909090')
-  router.push('/main')
+  user.login().then(() => {
+    router.push('/main')
+  })
 }
 </script>
 

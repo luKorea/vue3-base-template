@@ -21,6 +21,7 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
         _recurseGetRoute(menu.children)
       } else {
         const route = allRoutes.find((route) => {
+          if (route.path === menu.url) route.meta = menu.meta
           return route.path === menu.url
         })
         if (route) routes.push(route)

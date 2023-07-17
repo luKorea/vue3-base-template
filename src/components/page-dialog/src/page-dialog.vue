@@ -1,42 +1,93 @@
 <template>
-  <el-card v-if="dialogVisible" style="width: 100%">
-    <div class="search-title">
-      <!-- 优化展示标题 -->
-      <slot name="titleHandler">
-        <div>{{ modalConfig.title }}</div>
-      </slot>
-      <div>
-        <slot name="otherHandle"></slot>
-        <el-button
-          v-if="btnOperation.showCancelBtn"
-          size="mini"
-          @click="dialogVisible = false"
-          >{{ btnOperation.showCancelText }}</el-button
+  <div class="page-dialog">
+    <el-dialog v-model="dialogVisible" v-bind="dialogOperation">
+      <template #title>
+        <div class="dialog-title">
+          <!-- 优化展示标题 -->
+          <slot name="titleHandler">
+            <div class="hg-items-center hg-flex hg-text-left">
+              <div class="hg-mr-1">{{ modalConfig?.title }}</div>
+              <div class="hg-flex hg-flex-col hg-text-black hg-font-bold">
+                <div v-if="formData.createOptName" style="font-size: 12px">
+                  {{ formData.createTime }} 创建: {{ formData.createOptName }}
+                </div>
+                <div v-if="formData.auditOptName" style="font-size: 12px">
+                  {{ formData.updateTime }} 最后修改:
+                  {{ formData.auditOptName }}
+                </div>
+              </div>
+            </div>
+          </slot>
+          <div class="dialog-operation">
+            <el-icon size="20" color="#ccc" @click="changeFullScreen">
+              <i-ep-full-screen v-if="!dialogOperation.fullscreen" />
+              <i-ep-circle-close v-else />
+            </el-icon>
+          </div>
+        </div>
+      </template>
+      <template #default>
+        <slot
+          name="titleWrapper"
+          :row="{
+            data: formData,
+            ref: pageFormRef
+          }"
+        ></slot>
+        <hy-form
+          ref="pageFormRef"
+          v-bind="{
+            colLayout: {
+              xl: 24,
+              lg: 24,
+              md: 24,
+              sm: 24,
+              xs: 24
+            },
+            ...modalConfig
+          }"
+          v-model="formData"
+          @changeSelect="handleChangeSelect"
+          @remoteMethod="handleRemoteMethod"
+          @uploadData="getUploadData"
         >
-        <el-button
-          v-if="btnOperation.showConfirmBtn"
-          size="mini"
-          type="primary"
-          @click="handleConfirmClick"
-        >
-          {{ btnOperation.showConfirmText }}
-        </el-button>
-      </div>
-    </div>
-    <hy-form
-      ref="pageFormRef"
-      v-bind="modalConfig"
-      v-model="formData"
-      @changeSelect="handleChangeSelect"
-      @remoteMethod="handleRemoteMethod"
-      @uploadData="getUploadData"
-    ></hy-form>
-    <slot></slot>
-  </el-card>
+        </hy-form>
+        <slot></slot>
+      </template>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-space>
+            <!-- 新增自定义按钮，用于单页面中操作走不同请求操作, 增加延展性 -->
+            <slot
+              name="footerHandle"
+              :row="{
+                data: formData,
+                ref: pageFormRef
+              }"
+            ></slot>
+            <el-button
+              v-if="btnOperation.showCancelBtn"
+              size="mini"
+              @click="dialogVisible = false"
+              >{{ btnOperation.showCancelText }}</el-button
+            >
+            <el-button
+              v-if="btnOperation.showConfirmBtn"
+              size="mini"
+              type="primary"
+              @click="handleConfirmClick"
+            >
+              {{ btnOperation.showConfirmText }}
+            </el-button>
+          </el-space>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { successTip, errorTip } from '@/utils/tip-info'
 
 import HyForm from '@/base-ui/form'
@@ -47,14 +98,12 @@ interface IOperationName {
   editName: string
   createName: string
 }
-
 interface IBtnOperation {
   showConfirmBtn: boolean
   showConfirmText: string
   showCancelBtn: boolean
   showCancelText: string
 }
-
 interface IProps {
   modalConfig: any
   defaultInfo: any
@@ -87,6 +136,20 @@ const emit = defineEmits([
   'uploadData',
   'otherOptions'
 ])
+const dialogOperation = reactive({
+  width: '50%',
+  top: '2vh',
+  draggable: false,
+  showClose: false,
+  closeOnClickModal: false,
+  closeOnPressEscape: false,
+  destroyOnClose: false,
+  fullscreen: false
+})
+
+function changeFullScreen() {
+  dialogOperation.fullscreen = !dialogOperation.fullscreen
+}
 const dialogVisible = ref(false)
 const formData = ref<any>({})
 // 获取表单组件，监听表单是否填写完整
@@ -185,28 +248,39 @@ const handleRemoteMethod = (item: any) => {
 const getUploadData = (data: any) => {
   emit('uploadData', data)
 }
+
 defineExpose({
   dialogVisible
 })
 </script>
 
 <style scoped lang="less">
-.page-modal {
-  :deep(.el-drawer__body) {
-    overflow: auto !important;
+.page-dialog {
+  :deep(.el-dialog) {
+    border-radius: 10px !important;
   }
-  :deep(.el-drawer__header) {
-    margin-bottom: 0 !important;
+  :deep(.el-dialog__body) {
+    height: calc(100vh - 120px);
+    overflow: hidden;
+    overflow-y: auto;
+  }
+  :deep(.el-dialog .el-dialog__header) {
     box-sizing: border-box;
     border-bottom: 1px solid #dcdfe6;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px 0px;
-    padding: 10px 20px;
+    margin-right: 0;
+    padding-bottom: 20px;
   }
-  .search-title {
+  .dialog-title {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
-    color: rgb(182, 176, 176);
+    align-items: center;
   }
+  .dialog-operation {
+    cursor: pointer;
+  }
+}
+.hide-border {
+  border-radius: 0 !important;
 }
 </style>

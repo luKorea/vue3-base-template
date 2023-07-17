@@ -1,6 +1,6 @@
 <template>
-  <div class="one">
-    <h2>one</h2>
+  <div class="cpn2">
+    <h2>cpn2</h2>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'One',
+  name: 'cpn2',
   setup() {
     return {}
   }

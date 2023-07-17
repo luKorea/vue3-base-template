@@ -28,7 +28,9 @@
               >
                 <el-input
                   clearable
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请输入${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
                   :model-value="modelValue[`${item.field}`]"
@@ -41,7 +43,9 @@
               <template v-if="item.type === 'inputSlot'">
                 <el-input
                   clearable
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请输入${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   :model-value="modelValue[`${item.field}`]"
                   :data-clipboard-text="'测试一下'"
@@ -49,38 +53,14 @@
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 >
-                  <template v-if="item.prepend" #prepend>{{
-                    item.prepend
-                  }}</template>
-                  <template v-if="item.append" #append>
-                    <div
-                      v-if="item.otherOptions?.isCopy"
-                      style="cursor: pointer"
-                      @click="copyTextInfo(modelValue[`${item.field}`])"
-                    >
-                      {{ item.append }}
-                    </div>
-                    <div
-                      v-else-if="item.otherOptions?.isLink"
-                      style="cursor: pointer"
-                      @click="openLink(modelValue[`${item.field}`])"
-                    >
-                      {{ item.append }}
-                    </div>
-                    <div
-                      v-else-if="
-                        !item.otherOptions?.isLink && !item.otherOptions?.isCopy
-                      "
-                    >
-                      {{ item.append }}
-                    </div>
-                  </template>
                 </el-input>
               </template>
               <template v-if="item.type === 'textarea'">
                 <el-input
                   clearable
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请输入${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   type="textarea"
                   :model-value="modelValue[`${item.field}`]"
@@ -92,7 +72,9 @@
               <template v-if="item.type === 'number'">
                 <el-input
                   type="number"
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请输入${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   :model-value="modelValue[`${item.field}`]"
                   style="width: 100%"
@@ -111,7 +93,11 @@
                     {{ item.prepend }}
                   </div>
                   <el-input-number
-                    :placeholder="item.placeholder"
+                    :placeholder="
+                      item.placeholder
+                        ? item.placeholder
+                        : `请输入${item.label}`
+                    "
                     v-bind="item.otherOptions"
                     :model-value="modelValue[`${item.field}`]"
                     style="width: 100%"
@@ -141,7 +127,9 @@
               </template>
               <template v-else-if="item.type === 'radio'">
                 <el-radio-group
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请输入${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   style="width: 100%"
                   class="hg-flex"
@@ -163,7 +151,9 @@
 
               <template v-else-if="item.type === 'checkbox'">
                 <el-checkbox-group
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请选择${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   style="width: 100%"
                   :model-value="modelValue[`${item.field}`]"
@@ -184,7 +174,9 @@
                 <el-select
                   clearable
                   filterable
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请选择${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   style="width: 100%"
                   :model-value="modelValue[`${item.field}`]"
@@ -209,7 +201,9 @@
                   filterable
                   remote
                   reserve-keyword
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请选择${item.label}`
+                  "
                   :remote-method="handleRemoteMethod($event, item.field)"
                   v-bind="item.otherOptions"
                   style="width: 100%"
@@ -228,9 +222,10 @@
 
               <template v-else-if="item.type === 'cascader'">
                 <el-cascader
-                  v-if="showCascader"
                   :options="item.options"
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请选择${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   style="width: 100%"
                   clearable
@@ -242,7 +237,9 @@
 
               <template v-else-if="item.type === 'treeSelect'">
                 <el-select
-                  :placeholder="item.placeholder"
+                  :placeholder="
+                    item.placeholder ? item.placeholder : `请选择${item.label}`
+                  "
                   v-bind="item.otherOptions"
                   style="width: 100%"
                   :model-value="modelValue[`${item.field}`]"
@@ -269,54 +266,22 @@
                   item.type === 'daterange'
                 "
               >
-                <div class="hg-flex">
-                  <div
-                    v-if="item.prepend"
-                    class="hg-mr-1"
-                    style="min-width: 50px"
-                  >
-                    {{ item.prepend }}
-                  </div>
-                  <el-date-picker
-                    style="width: 100%"
-                    :type="item.type"
-                    v-bind="item.otherOptions"
-                    :model-value="modelValue[`${item.field}`]"
-                    @update:modelValue="handleValueChange($event, item.field)"
-                  ></el-date-picker>
-                  <div
-                    v-if="item.append"
-                    class="hg-ml-1"
-                    style="min-width: 40px"
-                  >
-                    {{ item.append }}
-                  </div>
-                </div>
+                <el-date-picker
+                  style="width: 100%"
+                  :type="item.type"
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
+                ></el-date-picker>
               </template>
               <template v-else-if="item.type === 'timePicker'">
-                <div class="hg-flex">
-                  <div
-                    v-if="item.prepend"
-                    class="hg-mr-1"
-                    style="min-width: 50px"
-                  >
-                    {{ item.prepend }}
-                  </div>
-                  <el-time-picker
-                    style="width: 100%"
-                    :type="item.type"
-                    v-bind="item.otherOptions"
-                    :model-value="modelValue[`${item.field}`]"
-                    @update:modelValue="handleValueChange($event, item.field)"
-                  ></el-time-picker>
-                  <div
-                    v-if="item.append"
-                    class="hg-ml-1"
-                    style="min-width: 40px"
-                  >
-                    {{ item.append }}
-                  </div>
-                </div>
+                <el-time-picker
+                  style="width: 100%"
+                  :type="item.type"
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
+                ></el-time-picker>
               </template>
               <template v-if="item.type === 'inputRange'">
                 <el-input
@@ -432,6 +397,10 @@ const handleUploadData = (data: any, filed: string) => {
     field: filed
   })
 }
+
+defineExpose({
+  formRef
+})
 </script>
 
 <style scoped lang="less">

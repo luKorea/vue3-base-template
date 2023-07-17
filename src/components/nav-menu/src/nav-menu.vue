@@ -9,11 +9,11 @@
         prefix-icon="el-icon-search"
       ></el-input>
     </div>
-    <el-menu class="el-menu-vertical" :collapse="collapse" text-color="#fff">
-      <!-- <nav-menu-item
-        :menuList="filterTableData"
-        :defaultValue="defaultValue"
-      ></nav-menu-item> -->
+    <el-menu class="el-menu-vertical" :collapse="collapse">
+      <nav-menu-item
+        :menu-list="filterTableData"
+        :default-value="defaultValue"
+      ></nav-menu-item>
     </el-menu>
   </div>
 </template>
@@ -23,6 +23,8 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { pathMapToMenu } from '@/utils/map-menus'
+import userStore from '@/store/module/user'
+import { storeToRefs } from 'pinia'
 // import navMenuItem from './nav-menu-item.vue'
 
 interface IProps {
@@ -32,27 +34,30 @@ withDefaults(defineProps<IProps>(), {
   collapse: false
 })
 // TODO nav-menu映射用户菜单列表
-const store = ref<any>()
-const searchValue = ref<any>('')
+const store = userStore()
 // TODO  1. 菜单映射修改
-const userMenus = computed(() => store.value.state.login.userMenus)
+
+const { initState } = storeToRefs(store)
+const userMenus = initState.value.userMenus
+const searchValue = ref<any>('')
 // route
 const route = useRoute()
 const currentPath = route.path
 
 // data
-const menu = pathMapToMenu(userMenus.value, currentPath)
-const defaultValue = ref(menu.id + '')
-const expandRow = ref<any>([])
+const menu = pathMapToMenu(userMenus, currentPath)
+
+const defaultValue = ref<string>(menu.id + '')
+const expandRow = ref<any[]>([])
 // 目前只做树形搜索
 const filterTableData = computed(() => {
   if (searchValue.value !== '') {
-    setExpandRow(userMenus.value)
+    setExpandRow(userMenus)
     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
     expandRow.value = expandRow.value.join(',').split(',')
-    return handleTreeData(userMenus.value, searchValue.value)
+    return handleTreeData(userMenus, searchValue.value)
   } else {
-    return userMenus.value
+    return userMenus
   }
 })
 //  树形表格过滤
@@ -94,6 +99,9 @@ const setExpandRow = (handleTreeData: any) => {
 <style scoped lang="less">
 .nav-menu {
   height: 100%;
+  :deep(.el-menu) {
+    background-color: #041527;
+  }
   .logo {
     display: flex;
     height: 40px;

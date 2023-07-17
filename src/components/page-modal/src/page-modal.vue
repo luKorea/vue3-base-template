@@ -1,38 +1,72 @@
 <template>
-  <el-card v-if="dialogVisible" style="width: 100%">
-    <div class="search-title">
-      <!-- 优化展示标题 -->
-      <slot name="titleHandler">
-        <div>{{ modalConfig.title }}</div>
-      </slot>
-      <div>
-        <slot name="otherHandle"></slot>
-        <el-button
-          v-if="btnOperation.showCancelBtn"
-          size="mini"
-          @click="dialogVisible = false"
-          >{{ btnOperation.showCancelText }}</el-button
+  <div class="page-modal">
+    <el-drawer v-model="dialogVisible" v-bind="drawerOperation">
+      <template #title>
+        <div class="modal-title">
+          <!-- 优化展示标题 -->
+          <slot name="titleHandler">
+            <div class="hg-items-center hg-flex hg-text-left">
+              <div class="hg-mr-1">{{ modalConfig?.title }}</div>
+              <div class="hg-flex hg-flex-col hg-text-black hg-font-bold">
+                <div v-if="formData.createOptName" style="font-size: 12px">
+                  {{ formData.createTime }} 创建: {{ formData.createOptName }}
+                </div>
+                <div v-if="formData.auditOptName" style="font-size: 12px">
+                  {{ formData.updateTime }} 最后修改:
+                  {{ formData.auditOptName }}
+                </div>
+              </div>
+            </div>
+          </slot>
+          <span class="dialog-footer">
+            <el-space>
+              <!-- 新增自定义按钮，用于单页面中操作走不同请求操作, 增加延展性 -->
+              <slot
+                name="otherModalHandler"
+                :row="{
+                  data: formData,
+                  ref: pageFormRef
+                }"
+              ></slot>
+              <el-button
+                v-if="btnOperation.showCancelBtn"
+                size="mini"
+                @click="dialogVisible = false"
+                >{{ btnOperation.showCancelText }}</el-button
+              >
+              <el-button
+                v-if="btnOperation.showConfirmBtn"
+                size="mini"
+                type="primary"
+                @click="handleConfirmClick"
+              >
+                {{ btnOperation.showConfirmText }}
+              </el-button>
+            </el-space>
+          </span>
+        </div>
+      </template>
+      <template #default>
+        <slot
+          name="titleWrapper"
+          :row="{
+            data: formData,
+            ref: pageFormRef
+          }"
+        ></slot>
+        <hy-form
+          ref="pageFormRef"
+          v-bind="modalConfig"
+          v-model="formData"
+          @changeSelect="handleChangeSelect"
+          @remoteMethod="handleRemoteMethod"
+          @uploadData="getUploadData"
         >
-        <el-button
-          v-if="btnOperation.showConfirmBtn"
-          size="mini"
-          type="primary"
-          @click="handleConfirmClick"
-        >
-          {{ btnOperation.showConfirmText }}
-        </el-button>
-      </div>
-    </div>
-    <hy-form
-      ref="pageFormRef"
-      v-bind="modalConfig"
-      v-model="formData"
-      @changeSelect="handleChangeSelect"
-      @remoteMethod="handleRemoteMethod"
-      @uploadData="getUploadData"
-    ></hy-form>
-    <slot></slot>
-  </el-card>
+        </hy-form>
+        <slot></slot>
+      </template>
+    </el-drawer>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -47,7 +81,6 @@ interface IOperationName {
   editName: string
   createName: string
 }
-
 interface IBtnOperation {
   showConfirmBtn: boolean
   showConfirmText: string
@@ -62,6 +95,7 @@ interface IProps {
   otherInfo: any
   pageName: string
   btnOperation: IBtnOperation
+  drawerOperation: any
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -77,6 +111,15 @@ const props = withDefaults(defineProps<IProps>(), {
     showConfirmBtn: true,
     showConfirmText: '保存',
     showCancelText: '取消'
+  }),
+  drawerOperation: () => ({
+    size: '85%',
+    direction: 'rtl',
+    draggable: true,
+    showClose: false,
+    closeOnClickModal: false,
+    closeOnPressEscape: false,
+    destroyOnClose: false
   })
 })
 const emit = defineEmits([
@@ -185,6 +228,7 @@ const handleRemoteMethod = (item: any) => {
 const getUploadData = (data: any) => {
   emit('uploadData', data)
 }
+
 defineExpose({
   dialogVisible
 })
@@ -192,9 +236,6 @@ defineExpose({
 
 <style scoped lang="less">
 .page-modal {
-  :deep(.el-drawer__body) {
-    overflow: auto !important;
-  }
   :deep(.el-drawer__header) {
     margin-bottom: 0 !important;
     box-sizing: border-box;
@@ -202,11 +243,10 @@ defineExpose({
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px 0px;
     padding: 10px 20px;
   }
-  .search-title {
+  .modal-title {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
-    color: rgb(182, 176, 176);
+    align-items: center;
   }
 }
 </style>

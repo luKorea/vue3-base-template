@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { pathMapBreadcrumbs } from '@/utils/map-menus'
 
@@ -22,12 +22,12 @@ const handleFoldClick = () => {
 
 // nav-header头部映射用户菜单
 const store = ref<any>()
-const breadcrumbs = computed(() => {
-  const userMenus = store.value.state.login.userMenus
-  const route = useRoute()
-  const currentPath = route.path
-  return pathMapBreadcrumbs(userMenus, currentPath)
-})
+// const breadcrumbs = computed(() => {
+//   const userMenus = store.value.state.login.userMenus
+//   const route = useRoute()
+//   const currentPath = route.path
+//   return pathMapBreadcrumbs(userMenus, currentPath)
+// })
 </script>
 
 <style scoped lang="less">

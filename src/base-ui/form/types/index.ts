@@ -25,6 +25,12 @@ type IFormType =
   | 'inputSlot'
   | 'custom'
 
+export interface IOtherOperation {
+  valueFormat?: string
+  disabled?: boolean
+  placeholder?: string
+}
+
 export interface IFormItem {
   field: string
   type: IFormType
@@ -35,7 +41,7 @@ export interface IFormItem {
   // 针对select
   options?: any[]
   // 针对特殊的属性
-  otherOptions?: any
+  otherOptions?: IOtherOperation
   isHidden?: boolean
   disabled?: boolean
   // 针对区间选择器

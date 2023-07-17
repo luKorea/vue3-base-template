@@ -53,6 +53,7 @@ class HttpRequest {
           if (config.interceptors?.responseInterceptor) {
             res = config.interceptors.responseInterceptor(res)
           }
+          //  TODO后续加上统一错误处理
           resolve(res)
         })
         .catch((err) => {

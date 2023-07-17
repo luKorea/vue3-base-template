@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { throttle } from 'underscore'
 
-export default function useScroll(elRef?: any) {
+export function useScroll(elRef?: any) {
   let el = window as any
 
   const isReachBottom = ref(false)

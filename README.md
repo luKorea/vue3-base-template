@@ -10,6 +10,8 @@ npm run build
 3. npm i coderwhy
 4. npm i sortablejs
 5. npm i md5
+6. npm i tailwindcss
+7. npm install @element-plus/icons-vue
 
 # 集成命令
 

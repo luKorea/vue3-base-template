@@ -22,7 +22,7 @@ const errorInfo = reactive<IErrorType>({
 })
 
 function goHome() {
-  router.push('/')
+  router.push('/main')
 }
 </script>
 
