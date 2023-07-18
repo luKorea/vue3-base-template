@@ -1,13 +1,7 @@
 <template>
   <div class="nav-menu">
-    <div v-if="!collapse" class="logo">
-      <el-input
-        v-model="searchValue"
-        placeholder="请输入路由名称"
-        clearable
-        size="mini"
-        prefix-icon="el-icon-search"
-      ></el-input>
+    <div class="logo">
+      <img src="@/assets/logo.svg" alt="" />
     </div>
     <el-menu class="el-menu-vertical" :collapse="collapse">
       <nav-menu-item
@@ -25,7 +19,7 @@ import { useRoute } from 'vue-router'
 import { pathMapToMenu } from '@/utils/map-menus'
 import userStore from '@/store/module/user'
 import { storeToRefs } from 'pinia'
-// import navMenuItem from './nav-menu-item.vue'
+import navMenuItem from './nav-menu-item.vue'
 
 interface IProps {
   collapse: boolean
@@ -46,6 +40,7 @@ const currentPath = route.path
 
 // data
 const menu = pathMapToMenu(userMenus, currentPath)
+
 const defaultValue = ref<string>(menu.id + '')
 const expandRow = ref<any[]>([])
 // 目前只做树形搜索
@@ -97,30 +92,29 @@ const setExpandRow = (handleTreeData: any) => {
 
 <style scoped lang="less">
 .nav-menu {
-  height: 100%;
+  overflow: hidden;
+  overflow-y: auto;
   :deep(.el-menu) {
-    background-color: #041527;
+    background: #001529;
+  }
+  :deep(.el-menu-item) {
+    color: rgba(255, 255, 255, 0.65);
+  }
+  :deep(.el-menu-item.is-active) {
+    background-color: #1677ff;
+  }
+  :deep(.el-menu-item:hover) {
+    color: #fff;
+    background-color: #1677ff;
   }
   .logo {
     display: flex;
-    height: 40px;
-    line-height: 40px;
-    // padding: 4px;
-    margin: 4px;
-    // padding: 12px 10px 8px 10px;
-    flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
-
-    .img {
-      height: 100%;
-      margin: 0 10px;
-    }
-
-    .title {
-      font-size: 16px;
-      font-weight: 700;
-      color: white;
+    padding-left: 20px;
+    height: 48px;
+    img {
+      height: 28px;
+      width: 128px;
     }
   }
 }

@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'cpn3',
+  name: 'Cpn3',
   setup() {
     return {}
   }

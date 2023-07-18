@@ -110,7 +110,8 @@ const handleFoldChange = (isFold: boolean) => {
 
 .el-main {
   color: #333;
-  text-align: center;
+  // text-align: center;
   background-color: #f0f2f5;
+  padding: 15px;
 }
 </style>

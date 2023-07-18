@@ -42,6 +42,7 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     IEpCircleClose: typeof import('~icons/ep/circle-close')['default']
     IEpFullScreen: typeof import('~icons/ep/full-screen')['default']
+    IEpMenu: typeof import('~icons/ep/menu')['default']
     NavHeader: typeof import('./components/nav-header/src/nav-header.vue')['default']
     NavMenu: typeof import('./components/nav-menu/src/nav-menu.vue')['default']
     NavMenuItem: typeof import('./components/nav-menu/src/nav-menu-item.vue')['default']
