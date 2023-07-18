@@ -12,6 +12,7 @@ npm run build
 5. npm i md5
 6. npm i tailwindcss
 7. npm install @element-plus/icons-vue
+8. npm i uid
 
 # 集成命令
 

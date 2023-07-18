@@ -3,5 +3,6 @@ export default {
   path: '/cpn/cpn2',
   name: 'cpn2',
   component: cpn2,
-  children: []
+  children: [],
+  title: '表格组件使用'
 }

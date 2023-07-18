@@ -3,6 +3,7 @@ import { mapMenusToRoutes } from '@/utils/map-menus'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import router from '@/router'
+import getTempRoutes from '@/utils/get_temp_routes'
 const userStore = defineStore('user', () => {
   interface IData {
     token: string | undefined
@@ -21,12 +22,12 @@ const userStore = defineStore('user', () => {
     token && (initState.token = token)
     userInfo && (initState.userInfo = userInfo)
     if (userMenus) {
-      initState.userMenus = userMenus
-      mapUserMenusToRouter(userMenus)
+      mapUserMenusToRouter(getTempRoutes())
     }
   }
 
   function mapUserMenusToRouter(userMenus: any[]) {
+    initState.userMenus = userMenus
     const routes = mapMenusToRoutes(userMenus)
     routes.forEach((route) => router.addRoute('main', route))
   }
@@ -34,26 +35,14 @@ const userStore = defineStore('user', () => {
   function login() {
     return new Promise((resolve, reject) => {
       try {
-        const userMenus = [
-          {
-            url: '/cpn/cpn1',
-            title: '表单测试',
-            id: 1
-          },
-          {
-            url: '/cpn/cpn2',
-            title: '表格测试',
-            id: 2
-          }
-        ]
         localCache.setCache('token', 99999)
         localCache.setCache('userInfo', {
           name: 'korea',
           age: 20
         })
-        localCache.setCache('userMenus', userMenus)
-        initState.userMenus = userMenus
-        mapUserMenusToRouter(userMenus)
+        // 暂时写法
+        localCache.setCache('userMenus', getTempRoutes())
+        mapUserMenusToRouter(getTempRoutes())
         resolve('success')
       } catch (error) {
         reject(error)

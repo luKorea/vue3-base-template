@@ -46,7 +46,6 @@ const currentPath = route.path
 
 // data
 const menu = pathMapToMenu(userMenus, currentPath)
-
 const defaultValue = ref<string>(menu.id + '')
 const expandRow = ref<any[]>([])
 // 目前只做树形搜索
