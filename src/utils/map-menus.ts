@@ -58,6 +58,8 @@ export function pathMapToMenu(
         return findMenu
       }
     } else if (menu.url === currentPath) {
+      console.log(menu, 'menu')
+
       return menu
     }
   }

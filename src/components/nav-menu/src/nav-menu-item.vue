@@ -5,23 +5,21 @@
       <template v-if="item.children && item.children.length">
         <el-sub-menu :index="item.id + ''">
           <template #title>
-            <i v-if="item.icon" :class="item.icon"></i>
-            <span>{{ item.title }}</span>
+            <el-icon v-if="item.icon">
+              <component :is="item.icon"></component>
+            </el-icon>
+            <span> {{ item.title }}</span>
           </template>
           <nav-menu-item :menu-list="item.children"></nav-menu-item>
         </el-sub-menu>
       </template>
       <!-- 情况二：没子集的情况 -->
-      <el-menu-item
-        v-else
-        :class="item.id == selectIndex && 'is-active'"
-        :index="item.id + ''"
-        @click="handleMenuItem(item)"
-      >
-        <!-- <i v-if="item.icon" :class="item.icon"></i> -->
-        <el-icon><i-ep-menu /></el-icon>
+      <el-menu-item v-else :index="item.id + ''" @click="handleMenuItem(item)">
         <template #title>
-          {{ item.title }}
+          <el-icon v-if="item.icon">
+            <component :is="item.icon"></component>
+          </el-icon>
+          <span> {{ item.title }}</span>
         </template>
       </el-menu-item>
     </template>

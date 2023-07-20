@@ -1,7 +1,13 @@
 <template>
   <div class="main">
     <el-container class="main-content">
-      <el-aside :width="isCollapse ? '60px' : '210px'">
+      <el-aside
+        :width="
+          isCollapse
+            ? defaultSetting.sideCollapseWidth
+            : defaultSetting.sideWidth
+        "
+      >
         <nav-menu :collapse="isCollapse" />
       </el-aside>
       <el-container class="page">
@@ -35,6 +41,8 @@ import NavMenu from '@/components/nav-menu'
 import NavHeader from '@/components/nav-header'
 import NavTags from '@/components/nav-tags'
 
+import defaultSetting from '@/settings'
+
 const isCollapse = ref(false)
 const handleFoldChange = (isFold: boolean) => {
   isCollapse.value = isFold
@@ -42,6 +50,7 @@ const handleFoldChange = (isFold: boolean) => {
 </script>
 
 <style scoped lang="less">
+@import '../../assets/css/common.less';
 .fade-transform-leave-active,
 .fade-transform-enter-active {
   transition: all 0.5s;
@@ -84,6 +93,7 @@ const handleFoldChange = (isFold: boolean) => {
   color: #333;
   text-align: center;
   align-items: center;
+  padding: 0 15px;
 }
 
 .el-header {
@@ -100,7 +110,7 @@ const handleFoldChange = (isFold: boolean) => {
   transition: width 0.3s linear;
   scrollbar-width: none; /* firefox */
   -ms-overflow-style: none; /* IE 10+ */
-
+  background-color: @menuBg;
   &::-webkit-scrollbar {
     display: none;
   }

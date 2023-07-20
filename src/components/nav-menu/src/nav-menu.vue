@@ -1,9 +1,15 @@
 <template>
   <div class="nav-menu">
     <div class="logo">
-      <img src="@/assets/logo.svg" alt="" />
+      <img src="@/assets/logo.png" alt="" />
+      <span v-if="!collapse">{{ defaultSetting.title }}</span>
     </div>
-    <el-menu class="el-menu-vertical" :collapse="collapse">
+    <el-menu
+      :background-color="variables.menuBg"
+      :text-color="variables.menuText"
+      :active-text-color="variables.menuActiveText"
+      :collapse="collapse"
+    >
       <nav-menu-item
         :menu-list="filterTableData"
         :default-value="defaultValue"
@@ -20,6 +26,9 @@ import { pathMapToMenu } from '@/utils/map-menus'
 import userStore from '@/store/module/user'
 import { storeToRefs } from 'pinia'
 import navMenuItem from './nav-menu-item.vue'
+
+import variables from '@/assets/css/variables.module.less'
+import defaultSetting from '@/settings'
 
 interface IProps {
   collapse: boolean
@@ -95,13 +104,21 @@ const setExpandRow = (handleTreeData: any) => {
   overflow: hidden;
   overflow-y: auto;
   .logo {
+    width: 100%;
     display: flex;
     align-items: center;
-    padding-left: 20px;
+    justify-content: center;
     height: 48px;
+    margin: 0;
+    color: #fff;
+    font-weight: 600;
+    line-height: 50px;
+    font-size: 14px;
+    font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+    text-align: center;
     img {
-      height: 28px;
-      width: 128px;
+      width: 15px;
+      height: 15px;
     }
   }
 }
