@@ -1,10 +1,9 @@
 <template>
   <div class="nav-header">
-    <i
-      class="fold-menu"
-      :class="isFold ? 'el-icon-s-fold' : 'el-icon-s-unfold'"
-      @click="handleFoldClick"
-    ></i>
+    <el-icon class="fold-menu" @click="handleFoldClick">
+      <i-ep-expand v-if="isFold"></i-ep-expand>
+      <i-ep-fold v-else></i-ep-fold>
+    </el-icon>
   </div>
 </template>
 
@@ -37,8 +36,9 @@ const store = ref<any>()
   width: 100%;
 
   .fold-menu {
-    font-size: 30px;
+    font-size: 24px;
     cursor: pointer;
+    color: #ababab;
   }
 
   .content {

@@ -95,10 +95,8 @@ const handleFoldChange = (isFold: boolean) => {
 .el-aside {
   overflow-x: hidden;
   overflow-y: auto;
-  line-height: 200px;
   text-align: left;
   cursor: pointer;
-  background-color: #001529;
   transition: width 0.3s linear;
   scrollbar-width: none; /* firefox */
   -ms-overflow-style: none; /* IE 10+ */

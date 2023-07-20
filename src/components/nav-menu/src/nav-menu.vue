@@ -94,19 +94,6 @@ const setExpandRow = (handleTreeData: any) => {
 .nav-menu {
   overflow: hidden;
   overflow-y: auto;
-  :deep(.el-menu) {
-    background: #001529;
-  }
-  :deep(.el-menu-item) {
-    color: rgba(255, 255, 255, 0.65);
-  }
-  :deep(.el-menu-item.is-active) {
-    background-color: #1677ff;
-  }
-  :deep(.el-menu-item:hover) {
-    color: #fff;
-    background-color: #1677ff;
-  }
   .logo {
     display: flex;
     align-items: center;

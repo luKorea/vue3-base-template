@@ -20,7 +20,9 @@
       >
         <!-- <i v-if="item.icon" :class="item.icon"></i> -->
         <el-icon><i-ep-menu /></el-icon>
-        <span>{{ item.title }}</span>
+        <template #title>
+          {{ item.title }}
+        </template>
       </el-menu-item>
     </template>
   </div>
@@ -51,10 +53,4 @@ const handleMenuItem = (item: any) => {
 }
 </script>
 
-<style lang="less" scope>
-.nav-item {
-  :deep(.el-menu-item.is-active) {
-    background-color: #1677ff;
-  }
-}
-</style>
+<style lang="less" scope></style>

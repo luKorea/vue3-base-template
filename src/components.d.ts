@@ -41,6 +41,8 @@ declare module 'vue' {
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElTree: typeof import('element-plus/es')['ElTree']
     IEpCircleClose: typeof import('~icons/ep/circle-close')['default']
+    IEpExpand: typeof import('~icons/ep/expand')['default']
+    IEpFold: typeof import('~icons/ep/fold')['default']
     IEpFullScreen: typeof import('~icons/ep/full-screen')['default']
     IEpMenu: typeof import('~icons/ep/menu')['default']
     NavHeader: typeof import('./components/nav-header/src/nav-header.vue')['default']
