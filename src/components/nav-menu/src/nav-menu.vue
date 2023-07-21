@@ -9,10 +9,12 @@
       :text-color="variables.menuText"
       :active-text-color="variables.menuActiveText"
       :collapse="collapse"
+      :default-active="defaultValue"
     >
       <nav-menu-item
         :menu-list="filterTableData"
         :default-value="defaultValue"
+        :collapse="collapse"
       ></nav-menu-item>
     </el-menu>
   </div>
@@ -103,6 +105,9 @@ const setExpandRow = (handleTreeData: any) => {
 .nav-menu {
   overflow: hidden;
   overflow-y: auto;
+  :deep(.el-menu) {
+    border-right: none;
+  }
   .logo {
     width: 100%;
     display: flex;

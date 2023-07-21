@@ -7,8 +7,6 @@ const Icons = require('unplugin-icons/webpack')
 const IconsResolver = require('unplugin-icons/resolver')
 const defaultSetting = require('./src/settings')
 
-const pathSrc = path.resolve(__dirname, 'src')
-
 module.exports = defineConfig({
   devServer: {
     hot: true,
@@ -35,8 +33,7 @@ module.exports = defineConfig({
           IconsResolver({
             prefix: 'icon'
           })
-        ],
-        dts: path.resolve(pathSrc, 'auto-imports.d.ts')
+        ]
       }),
       Components({
         resolvers: [
@@ -46,8 +43,7 @@ module.exports = defineConfig({
             // 其他图标库请到 https://icon-sets.iconify.design/
             enabledCollections: ['ep']
           })
-        ],
-        dts: path.resolve(pathSrc, 'components.d.ts')
+        ]
       }),
       // 让unplugin-icons自动安装图标库
       Icons({

@@ -1,20 +1,20 @@
 <template>
-  <div class="nav-item">
-    <!-- 递归实现无限子菜单 -->
-    <template v-for="item in menuList" :key="item.id">
-      <template v-if="item.children && item.children.length">
-        <el-sub-menu :index="item.id + ''">
-          <template #title>
-            <el-icon v-if="item.icon">
-              <component :is="item.icon"></component>
-            </el-icon>
-            <span> {{ item.title }}</span>
-          </template>
-          <nav-menu-item :menu-list="item.children"></nav-menu-item>
-        </el-sub-menu>
-      </template>
-      <!-- 情况二：没子集的情况 -->
-      <el-menu-item v-else :index="item.id + ''" @click="handleMenuItem(item)">
+  <!-- 递归实现无限子菜单 -->
+  <template v-for="item in menuList" :key="item.id">
+    <template v-if="item.children && item.children.length">
+      <el-sub-menu :index="item.id + ''" class="sub-item">
+        <template #title>
+          <el-icon v-if="item.icon">
+            <component :is="item.icon"></component>
+          </el-icon>
+          <span> {{ item.title }}</span>
+        </template>
+        <nav-menu-item :menu-list="item.children"></nav-menu-item>
+      </el-sub-menu>
+    </template>
+    <!-- 情况二：没子集的情况 -->
+    <el-menu-item-group v-else>
+      <el-menu-item :index="item.id + ''" @click="handleMenuItem(item)">
         <template #title>
           <el-icon v-if="item.icon">
             <component :is="item.icon"></component>
@@ -22,8 +22,8 @@
           <span> {{ item.title }}</span>
         </template>
       </el-menu-item>
-    </template>
-  </div>
+    </el-menu-item-group>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -33,6 +33,7 @@ import { useRouter } from 'vue-router'
 interface IProps {
   defaultValue: string
   menuList: any[]
+  collapse: boolean
 }
 const props = defineProps<IProps>()
 
@@ -51,4 +52,13 @@ const handleMenuItem = (item: any) => {
 }
 </script>
 
-<style lang="less" scope></style>
+<style lang="less" scope>
+.small-icon {
+  margin-left: -10px;
+}
+.sub-item {
+  .el-sub-menu__title {
+    padding: 0 12px !important;
+  }
+}
+</style>

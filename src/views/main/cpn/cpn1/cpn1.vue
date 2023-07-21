@@ -1,10 +1,10 @@
 <template>
-  <hy-card title="表单使用">
+  <page-content-layout>
     <el-space>
       <el-tag @click="handleNewData">侧边弹框表单</el-tag>
       <el-tag @click="handleNewDialogData">弹框表单</el-tag>
     </el-space>
-  </hy-card>
+  </page-content-layout>
   <page-modal
     ref="pageModalRef"
     :default-info="defaultInfo"
@@ -39,7 +39,6 @@ import { usePageModal, usePageDialog } from '@/hooks'
 
 import { modalConfig } from './config/modal.config'
 import { useStoreName } from './hooks/use-page-list'
-import HyCard from '@/base-ui/card'
 
 const { pageModalRef, defaultInfo, handleNewData } = usePageModal()
 const {

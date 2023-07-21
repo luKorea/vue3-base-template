@@ -1,18 +1,7 @@
 <template>
-  <div class="cpn3">
-    <h2>cpn3</h2>
-  </div>
+  <page-content-layout> cpn3 </page-content-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'Cpn3',
-  setup() {
-    return {}
-  }
-})
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

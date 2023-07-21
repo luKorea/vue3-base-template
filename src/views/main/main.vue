@@ -16,19 +16,19 @@
         </el-header>
         <!-- <nav-tags></nav-tags> -->
         <el-main class="page-content">
-          <transition
+          <!-- <transition
             appear
             appear-active-class="animate__animated animate__pulse"
             enter-active-class="animate__animated animate__fadeIn"
             name="fade"
-          >
-            <router-view v-slot="{ Component }">
-              <keep-alive v-if="$route.meta.cache">
-                <component :is="Component"></component>
-              </keep-alive>
-              <component :is="Component" v-else></component>
-            </router-view>
-          </transition>
+          > -->
+          <router-view v-slot="{ Component }">
+            <keep-alive v-if="$route.meta.cache">
+              <component :is="Component"></component>
+            </keep-alive>
+            <component :is="Component" v-else></component>
+          </router-view>
+          <!-- </transition> -->
         </el-main>
       </el-container>
     </el-container>

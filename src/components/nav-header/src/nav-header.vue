@@ -1,51 +1,64 @@
 <template>
   <div class="nav-header">
-    <el-icon class="fold-menu" @click="handleFoldClick">
-      <Expand v-if="isFold" />
-      <Fold v-else />
-    </el-icon>
+    <div class="left">
+      <el-icon class="fold-menu" @click="handleFoldClick">
+        <Expand v-if="isFold" />
+        <Fold v-else />
+      </el-icon>
+    </div>
+    <div class="right">
+      <el-dropdown>
+        <div class="right-title">
+          Dropdown List
+          <el-icon class="right-icon">
+            <arrow-down />
+          </el-icon>
+        </div>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>修改密码</el-dropdown-item>
+            <el-dropdown-item>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { pathMapBreadcrumbs } from '@/utils/map-menus'
-import userStore from '@/store/module/user'
-import { storeToRefs } from 'pinia'
-
+import { ref } from 'vue'
 const emits = defineEmits(['foldChange'])
 const isFold = ref(false)
 const handleFoldClick = () => {
-  // isFold.value = !isFold.value
+  isFold.value = !isFold.value
   emits('foldChange', isFold.value)
 }
-
-// nav-header头部映射用户菜单
-const store = userStore()
-const { initState } = storeToRefs(store)
-
-const breadcrumbs = computed(() => {
-  const route = useRoute()
-  const currentPath = route.path
-  return pathMapBreadcrumbs(initState.value.userMenus, currentPath)
-})
-
-console.log(breadcrumbs.value)
 </script>
 
 <style scoped lang="less">
 .nav-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
-
   .fold-menu {
     font-size: 24px;
     cursor: pointer;
     color: #ababab;
   }
-
+  .right {
+    height: 48px;
+    .right-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      line-height: 48px;
+    }
+    .right-icon {
+      margin-left: 6px;
+    }
+  }
   .content {
     display: flex;
     justify-content: space-between;

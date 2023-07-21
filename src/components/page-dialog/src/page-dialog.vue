@@ -19,9 +19,9 @@
             </div>
           </slot>
           <div class="dialog-operation">
-            <el-icon size="20" color="#ccc" @click="changeFullScreen">
-              <i-ep-full-screen v-if="!dialogOperation.fullscreen" />
-              <i-ep-circle-close v-else />
+            <el-icon size="20" @click="changeFullScreen">
+              <FullScreen v-if="!dialogOperation.fullscreen" />
+              <CircleClose v-else />
             </el-icon>
           </div>
         </div>

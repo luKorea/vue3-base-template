@@ -12,6 +12,7 @@ const components: any[] = [PageContent, PageModal, PageForm, PageDialog]
 
 export default function (app: App): void {
   for (const component of components) {
-    app.component(component.name, component)
+    console.log(component.__name, component)
+    app.component(component.__name, component)
   }
 }

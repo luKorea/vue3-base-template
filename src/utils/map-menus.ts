@@ -54,7 +54,7 @@ export function pathMapToMenu(
       const findMenu = pathMapToMenu(menu.children, currentPath)
       if (findMenu) {
         breadcrumbs?.push({ name: menu.title })
-        breadcrumbs?.push({ name: findMenu.title })
+        breadcrumbs?.push({ name: findMenu.title, path: findMenu.url })
         return findMenu
       }
     } else if (menu.url === currentPath) {
