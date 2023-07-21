@@ -31,6 +31,12 @@ import {
   nextTick
 } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import type {
+  IToolbarConfig,
+  IEditorConfig,
+  IDomEditor
+} from '@wangeditor/editor'
+import { ElMessage } from 'element-plus'
 
 interface IProps {
   value: string
@@ -49,11 +55,45 @@ const emits = defineEmits(['update:value'])
 
 const editorRef = shallowRef()
 const editorValue = ref<string>('')
-const toolbarConfig = reactive<any>({})
-const editorConfig = reactive<any>({})
+const toolbarConfig = reactive<Partial<IToolbarConfig>>({})
+const editorConfig = reactive<Partial<IEditorConfig>>({
+  MENU_CONF: {
+    uploadImage: {
+      server: '/api/upload'
+    }
+  }
+})
 
-function handleCreated(editor: any) {
+function handleCreated(editor: IDomEditor) {
+  initEditor()
   editorRef.value = editor
+}
+
+function initEditor() {
+  editorConfig.customAlert = (s: string, t: string) => {
+    switch (t) {
+      case 'success':
+        ElMessage.success(s)
+        break
+      case 'info':
+        ElMessage.info(s)
+        break
+      case 'warning':
+        ElMessage.warning(s)
+        break
+      case 'error':
+        ElMessage.error(s)
+        break
+      default:
+        ElMessage.info(s)
+        break
+    }
+  }
+}
+
+async function handleChange(event: any) {
+  await nextTick()
+  emits('update:value', event.getHtml())
 }
 
 onMounted(async () => {
@@ -62,12 +102,6 @@ onMounted(async () => {
     editorValue.value = props.value
   }
 })
-
-async function handleChange(event: any) {
-  await nextTick()
-  emits('update:value', event.getHtml())
-}
-
 // 组件销毁时，也及时销毁编辑器，重要！
 onBeforeUnmount(() => {
   const editor = editorRef.value
