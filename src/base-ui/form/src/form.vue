@@ -15,7 +15,10 @@
           <template v-if="item.type === 'divider'">
             <el-divider style="width: 100%">{{ item.label }}</el-divider>
           </template>
-          <el-col v-if="!item.isHidden" v-bind="colLayout">
+          <el-col
+            v-if="!item.isHidden && item.type !== 'editor'"
+            v-bind="colLayout"
+          >
             <el-form-item
               v-if="!item.isHidden"
               :label="item.label"
@@ -315,6 +318,21 @@
               </template>
             </el-form-item>
           </el-col>
+          <el-col v-if="item.type === 'editor'" :span="24">
+            <el-form-item
+              v-if="!item.isHidden"
+              :label="item.label"
+              :rules="item.rules"
+              :style="itemStyle"
+              :prop="item.field"
+            >
+              <hy-editor
+                :value="modelValue[`${item.field}`]"
+                :placeholder="item.placeholder"
+                @update:value="handleValueChange($event, item.field)"
+              ></hy-editor>
+            </el-form-item>
+          </el-col>
         </template>
       </el-row>
       <slot name="other"></slot>
@@ -329,6 +347,8 @@
 import { ref } from 'vue'
 import { IFormItem } from '../types'
 import type { ElForm } from 'element-plus'
+import HyEditor from '@/base-ui/editor'
+
 interface IProps {
   modelValue: any
   formItems: IFormItem

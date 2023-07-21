@@ -13,6 +13,8 @@ npm run build
 6. npm i tailwindcss
 7. npm install @element-plus/icons-vue
 8. npm i uid
+9. animate.css
+10. @wangeditor/editor @wangeditor/editor-for-vue@next
 
 # 集成命令
 

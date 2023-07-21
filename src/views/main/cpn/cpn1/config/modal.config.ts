@@ -18,20 +18,6 @@ export const modalConfig: IForm = {
       placeholder: '请输入备注'
     },
     {
-      field: 'typeId',
-      type: 'select',
-      label: '问题类型',
-      placeholder: '请选择问题类型',
-      options: [],
-      rules: [
-        {
-          required: true,
-          message: '请选择问题类型',
-          trigger: 'blur'
-        }
-      ]
-    },
-    {
       field: 'createTime',
       type: 'datetime',
       label: '发布时间',
@@ -76,6 +62,19 @@ export const modalConfig: IForm = {
         {
           value: 0,
           title: '否'
+        }
+      ]
+    },
+    {
+      field: 'content',
+      type: 'editor',
+      label: '富文本内容',
+      placeholder: '请输入富文本内容',
+      rules: [
+        {
+          required: true,
+          message: '请选择状态',
+          trigger: 'blur'
         }
       ]
     }
