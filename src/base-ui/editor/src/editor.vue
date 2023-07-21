@@ -45,6 +45,8 @@ interface IProps {
   placeholder: any
 }
 
+type InsertFnType = (url: string, alt: string, href: string) => void
+
 const props = withDefaults(defineProps<IProps>(), {
   mode: 'default',
   height: '400px',
@@ -58,18 +60,16 @@ const editorValue = ref<string>('')
 const toolbarConfig = reactive<Partial<IToolbarConfig>>({})
 const editorConfig = reactive<Partial<IEditorConfig>>({
   MENU_CONF: {
-    uploadImage: {
-      server: '/api/upload'
-    }
+    uploadImage: {}
   }
 })
-
 function handleCreated(editor: IDomEditor) {
   initEditor()
   editorRef.value = editor
 }
 
 function initEditor() {
+  // 自定义弹框信息
   editorConfig.customAlert = (s: string, t: string) => {
     switch (t) {
       case 'success':
@@ -87,6 +87,16 @@ function initEditor() {
       default:
         ElMessage.info(s)
         break
+    }
+  }
+  // 自定义上传
+  ;(editorConfig as any).MENU_CONF['uploadImage'] = {
+    // 自定义选择图片 InsertFnType
+    customBrowseAndUpload(insertFn: InsertFnType) {
+      // 自己选择文件
+      // 自己上传文件，并得到图片 url alt href
+      // 最后插入图片
+      // insertFn(url, alt, href)
     }
   }
 }
