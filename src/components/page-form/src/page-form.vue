@@ -9,14 +9,13 @@
         <slot name="otherHandle"></slot>
         <el-button
           v-if="btnOperation.showCancelBtn"
-          size="mini"
           @click="dialogVisible = false"
           >{{ btnOperation.showCancelText }}</el-button
         >
         <el-button
           v-if="btnOperation.showConfirmBtn"
-          size="mini"
           type="primary"
+          :loading="btnLoading"
           @click="handleConfirmClick"
         >
           {{ btnOperation.showConfirmText }}
@@ -26,7 +25,7 @@
     <hy-form
       ref="pageFormRef"
       v-bind="modalConfig"
-      v-model="formData"
+      @submit="getFormData"
       @changeSelect="handleChangeSelect"
       @remoteMethod="handleRemoteMethod"
       @uploadData="getUploadData"
@@ -36,12 +35,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { successTip, errorTip } from '@/utils/tip-info'
 
 import HyForm from '@/base-ui/form'
 import md5 from 'md5'
-import { _debounce } from '@/utils'
 
 interface IOperationName {
   editName: string
@@ -88,92 +86,83 @@ const emit = defineEmits([
   'otherOptions'
 ])
 const dialogVisible = ref(false)
-const formData = ref<any>({})
+const btnLoading = ref(false)
 // 获取表单组件，监听表单是否填写完整
 const pageFormRef = ref<InstanceType<typeof HyForm> | null>(null)
-// 监听defaultInfo值得变化，动态修改表单字段得值
-watch(
-  () => props.defaultInfo,
-  (newValue) => {
-    if (props?.modalConfig?.formItems) {
-      for (const item of props.modalConfig.formItems) {
-        if (item.type === 'checkbox') {
-          formData.value[item.field] = []
-        } else
-          formData.value[`${item.field}`] =
-            item.defaultValue ?? newValue[`${item.field}`]
-      }
-    }
-  }
-)
-
+const formData = ref<any>({})
+function getFormData(newValue: any) {
+  formData.value = newValue
+}
 // 点击确定按钮的逻辑
 // TODO page-form store 处理
 const store = ref()
-const handleConfirmClick = _debounce(() => {
-  const formRef = pageFormRef.value?.formRef
-  formRef?.validate((valid: any) => {
-    if (valid) {
-      if (formData.value.pwd) {
+const handleConfirmClick = async () => {
+  if (pageFormRef.value) {
+    try {
+      btnLoading.value = true
+      const formData: any = await pageFormRef.value.validateForm()
+      if (formData.pwd) {
         formData.value.pwd = md5(formData.value.pwd)
       }
+      // 编辑
       if (props.defaultInfo.isEdit && Object.keys(props.defaultInfo).length) {
-        console.log(formData.value, '表单中的数据', props.otherInfo, '其他数据')
-        // 编辑
-        store.value
-          .dispatch(props.operationName.editName, {
+        try {
+          const res = await store.value.dispatch(props.operationName.editName, {
             pageName: props.pageName,
             editData: {
               ...props.defaultInfo,
-              ...formData.value,
+              ...formData,
               ...props.otherInfo
             }
           })
-          .then((res: any) => {
-            successTip('操作成功')
-            // 如果hideDialog为false, 关闭当前页面, 做其他操作
-            if (!res.hideDialog) {
-              dialogVisible.value = false
-              emit('otherOptions', res, 'edit')
-            } else {
-              // 如果hideDialog为true, 不关闭当前页面, 做其他操作
-              emit('otherOptions', res, 'edit')
-            }
-          })
-          .catch((err: any) => {
-            dialogVisible.value = true
-            errorTip(err)
-          })
+          successTip('操作成功')
+          btnLoading.value = false
+          // 如果hideDialog为false, 关闭当前页面, 做其他操作
+          if (!res.hideDialog) {
+            dialogVisible.value = false
+            emit('otherOptions', res, 'edit')
+          } else {
+            // 如果hideDialog为true, 不关闭当前页面, 做其他操作
+            emit('otherOptions', res, 'edit')
+          }
+        } catch (error: any) {
+          errorTip(error)
+          btnLoading.value = false
+        }
       } else {
         // 新建
-        store.value
-          .dispatch(props.operationName.createName, {
-            pageName: props.pageName,
-            newData: {
-              ...formData.value,
-              ...props.otherInfo,
-              ...props.defaultInfo
+        try {
+          const res = await store.value.dispatch(
+            props.operationName.createName,
+            {
+              pageName: props.pageName,
+              newData: {
+                ...formData,
+                ...props.otherInfo,
+                ...props.defaultInfo
+              }
             }
-          })
-          .then((res: any) => {
-            successTip('操作成功')
-            // 如果hideDialog为false, 关闭当前页面, 做其他操作
-            if (!res.hideDialog) {
-              dialogVisible.value = false
-              emit('otherOptions', res, 'add')
-            } else {
-              // 如果hideDialog为true, 不关闭当前页面, 做其他操作
-              emit('otherOptions', res, 'add')
-            }
-          })
-          .catch((err: any) => {
-            dialogVisible.value = true
-            errorTip(err)
-          })
+          )
+          successTip('操作成功')
+          btnLoading.value = false
+          // 如果hideDialog为false, 关闭当前页面, 做其他操作
+          if (!res.hideDialog) {
+            dialogVisible.value = false
+            emit('otherOptions', res, 'add')
+          } else {
+            // 如果hideDialog为true, 不关闭当前页面, 做其他操作
+            emit('otherOptions', res, 'add')
+          }
+        } catch (error: any) {
+          errorTip(error)
+          btnLoading.value = false
+        }
       }
-    } else return false
-  })
-}, 500)
+    } catch (error) {
+      btnLoading.value = false
+    }
+  }
+}
 // 表单事件监听
 const handleChangeSelect = (item: any) => {
   emit('changeSelect', item)
@@ -185,6 +174,7 @@ const handleRemoteMethod = (item: any) => {
 const getUploadData = (data: any) => {
   emit('uploadData', data)
 }
+
 defineExpose({
   dialogVisible
 })

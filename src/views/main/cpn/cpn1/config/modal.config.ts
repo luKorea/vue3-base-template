@@ -31,6 +31,7 @@ export const modalConfig: IForm = {
       type: 'select',
       label: '状态',
       placeholder: '请选择状态',
+      defaultValue: 1,
       rules: [
         {
           required: true,

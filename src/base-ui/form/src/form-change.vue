@@ -1,3 +1,4 @@
+<!-- 这一版基于外部外部传入的 v-model 实现 -->
 <template>
   <div class="hy-form">
     <div class="header">
@@ -7,7 +8,7 @@
       ref="formRef"
       :label-width="labelWidth"
       :label-position="labelPosition"
-      :model="formData"
+      :model="modelValue"
       class="animate__animated animate__fadeIn"
     >
       <el-row :gutter="16">
@@ -30,13 +31,14 @@
                 v-if="item.type === 'input' || item.type === 'password'"
               >
                 <el-input
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   clearable
                   :placeholder="
                     item.placeholder ? item.placeholder : `请输入${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 />
@@ -44,13 +46,14 @@
               <!--扩展数字插槽-->
               <template v-if="item.type === 'inputSlot'">
                 <el-input
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   clearable
                   :placeholder="
                     item.placeholder ? item.placeholder : `请输入${item.label}`
                   "
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
                   :data-clipboard-text="'测试一下'"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 >
@@ -58,26 +61,28 @@
               </template>
               <template v-if="item.type === 'textarea'">
                 <el-input
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   clearable
                   :placeholder="
                     item.placeholder ? item.placeholder : `请输入${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   type="textarea"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 />
               </template>
               <template v-if="item.type === 'number'">
                 <el-input
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   type="number"
                   :placeholder="
                     item.placeholder ? item.placeholder : `请输入${item.label}`
                   "
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
                   style="width: 100%"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 />
@@ -92,15 +97,16 @@
                     {{ item.prepend }}
                   </div>
                   <el-input-number
-                    v-bind="item.otherOptions"
-                    v-model="formData[item.field]"
                     :placeholder="
                       item.placeholder
                         ? item.placeholder
                         : `请输入${item.label}`
                     "
+                    v-bind="item.otherOptions"
+                    :model-value="modelValue[`${item.field}`]"
                     style="width: 100%"
                     type="number"
+                    @update:modelValue="handleValueChange($event, item.field)"
                     @keyup.enter="handleKeyUp"
                     @clear="handleClear"
                   >
@@ -117,21 +123,23 @@
               <template v-else-if="item.type === 'switch'">
                 <el-switch
                   v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   :active-value="1"
                   :inactive-value="0"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 />
               </template>
               <template v-else-if="item.type === 'radio'">
                 <el-radio-group
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   :placeholder="
                     item.placeholder ? item.placeholder : `请输入${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   style="width: 100%"
                   class="hg-flex"
+                  :model-value="modelValue[`${item.field}`]"
                   clearable
+                  @update:modelValue="handleValueChange($event, item.field)"
                   @change="handleChangeSelect"
                   @clear="handleClear"
                 >
@@ -147,13 +155,14 @@
 
               <template v-else-if="item.type === 'checkbox'">
                 <el-checkbox-group
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   :placeholder="
                     item.placeholder ? item.placeholder : `请选择${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   style="width: 100%"
+                  :model-value="modelValue[`${item.field}`]"
                   class="hg-flex hg-flex-wrap"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-checkbox
                     v-for="option in item.options"
@@ -167,15 +176,16 @@
 
               <template v-else-if="item.type === 'select'">
                 <el-select
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   clearable
                   filterable
                   :placeholder="
                     item.placeholder ? item.placeholder : `请选择${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   style="width: 100%"
+                  :model-value="modelValue[`${item.field}`]"
                   :disabled="item.disabled"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   @change="handleChangeSelect($event, item.field, item.options)"
                   @clear="handleClear"
                 >
@@ -191,8 +201,6 @@
               <!-- 远程搜索下拉框 selectRemote -->
               <template v-else-if="item.type === 'selectRemote'">
                 <el-select
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   clearable
                   filterable
                   remote
@@ -201,7 +209,10 @@
                     item.placeholder ? item.placeholder : `请选择${item.label}`
                   "
                   :remote-method="handleRemoteMethod($event, item.field)"
+                  v-bind="item.otherOptions"
                   style="width: 100%"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -215,27 +226,29 @@
 
               <template v-else-if="item.type === 'cascader'">
                 <el-cascader
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   :options="item.options"
                   :placeholder="
                     item.placeholder ? item.placeholder : `请选择${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   style="width: 100%"
                   clearable
                   filterable
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-cascader>
               </template>
 
               <template v-else-if="item.type === 'treeSelect'">
                 <el-select
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   :placeholder="
                     item.placeholder ? item.placeholder : `请选择${item.label}`
                   "
+                  v-bind="item.otherOptions"
                   style="width: 100%"
+                  :model-value="modelValue[`${item.field}`]"
                   clearable
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-option style="height: auto">
                     <el-tree
@@ -258,37 +271,43 @@
                 "
               >
                 <el-date-picker
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   style="width: 100%"
                   :type="item.type"
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-date-picker>
               </template>
               <template v-else-if="item.type === 'timePicker'">
                 <el-time-picker
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.field]"
                   style="width: 100%"
                   :type="item.type"
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-time-picker>
               </template>
               <template v-if="item.type === 'inputRange'">
                 <el-input
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.startValue]"
                   clearable
                   placeholder="请输入起始值"
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.startValue}`]"
                   style="width: 49%"
+                  @update:modelValue="
+                    handleValueChange($event, item.startValue)
+                  "
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 />
                 <span style="margin: 0 1px">-</span>
                 <el-input
-                  v-bind="item.otherOptions"
-                  v-model="formData[item.endValue]"
                   clearable
                   placeholder="请输入结束值"
+                  v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.endValue}`]"
                   style="width: 49%"
+                  @update:modelValue="handleValueChange($event, item.endValue)"
                   @keyup.enter="handleKeyUp"
                   @clear="handleClear"
                 />
@@ -309,8 +328,9 @@
               :prop="item.field"
             >
               <hy-editor
-                v-model:value="formData[item.field]"
+                :value="modelValue[`${item.field}`]"
                 :placeholder="item.placeholder"
+                @update:value="handleValueChange($event, item.field)"
               ></hy-editor>
             </el-form-item>
           </el-col>
@@ -325,22 +345,18 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, reactive, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { IFormItem } from '../types'
 import type { ElForm } from 'element-plus'
 import HyEditor from '@/base-ui/editor'
 
 interface IProps {
   modelValue: any
-  formItems: IFormItem[]
+  formItems: IFormItem
   labelWidth: string
   labelPosition: string
   itemStyle: any
   colLayout: any
-}
-
-interface FormData {
-  [key: string]: any
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -356,46 +372,19 @@ const props = withDefaults(defineProps<IProps>(), {
   labelPosition: 'top'
 })
 const emit = defineEmits([
+  'update:modelValue',
   'changeSelect',
   'changeInput',
   'changeClear',
   'remoteMethod',
-  'uploadData',
-  'submit'
+  'uploadData'
 ])
 type FormInstance = InstanceType<typeof ElForm>
 const formRef = ref<FormInstance>()
-const formData = reactive<FormData>({})
-// 初始化表单数据
-watch(
-  () => props.formItems,
-  () => {
-    props.formItems && initFormData()
-  },
-  { immediate: true }
-)
-
-watch(formData, (newVal) => {
-  emit('submit', newVal)
-})
-
-function initFormData() {
-  for (const item of props.formItems) {
-    if (item.type === 'checkbox') {
-      formData[item.field] = []
-    }
-    formData[`${item.field}`] = item.defaultValue ?? formData[`${item.field}`]
-  }
-}
-// 校验表单数据
-const validateForm = () => {
-  return new Promise((resolve, reject) => {
-    formRef?.value?.validate((valid: boolean) => {
-      if (valid) {
-        resolve(formData)
-      } else reject('校验失败')
-    })
-  })
+// 更新表单数据
+const handleValueChange = (value: any, field: string) => {
+  console.log(value, field)
+  emit('update:modelValue', { ...props.modelValue, [field]: value })
 }
 // 事件处理
 // 1. 监听用户enter事件
@@ -431,8 +420,7 @@ const handleUploadData = (data: any, filed: string) => {
 }
 
 defineExpose({
-  formRef,
-  validateForm
+  formRef
 })
 </script>
 
