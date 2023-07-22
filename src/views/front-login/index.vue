@@ -106,17 +106,23 @@ const formRules = reactive({
 const loading = ref(false)
 
 function handleLogin() {
-  formRef.value?.validate((valid) => {
-    if (valid) {
-      loading.value = true
-      user.login(formData).then(() => {
-        setTimeout(() => {
-          loading.value = false
-          router.push('/main')
-        }, 2000)
-      })
-    }
+  user.login(formData).then(() => {
+    setTimeout(() => {
+      loading.value = false
+      router.push('/main')
+    }, 2000)
   })
+  // formRef.value?.validate((valid) => {
+  //   if (valid) {
+  //     loading.value = true
+  //     user.login(formData).then(() => {
+  //       setTimeout(() => {
+  //         loading.value = false
+  //         router.push('/main')
+  //       }, 2000)
+  //     })
+  //   }
+  // })
 }
 </script>
 
