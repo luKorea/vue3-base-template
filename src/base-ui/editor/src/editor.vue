@@ -28,7 +28,8 @@ import {
   shallowRef,
   onMounted,
   reactive,
-  nextTick
+  nextTick,
+  watch
 } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import type {
@@ -112,6 +113,7 @@ onMounted(async () => {
     editorValue.value = props.value
   }
 })
+
 // 组件销毁时，也及时销毁编辑器，重要！
 onBeforeUnmount(() => {
   const editor = editorRef.value
