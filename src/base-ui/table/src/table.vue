@@ -15,7 +15,6 @@
               <el-input
                 v-if="showSearch"
                 v-model="search"
-                size="mini"
                 placeholder="请输入内容"
                 suffix-icon="el-icon-search"
                 style="margin-right: 10px"

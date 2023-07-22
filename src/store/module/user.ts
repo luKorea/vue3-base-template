@@ -4,6 +4,12 @@ import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import router from '@/router'
 import getTempRoutes from '@/utils/get_temp_routes'
+import { createUniqueString } from '@/utils'
+
+export interface IFormData {
+  username: string
+  password: string
+}
 const userStore = defineStore('user', () => {
   interface IData {
     token: string | undefined
@@ -32,14 +38,11 @@ const userStore = defineStore('user', () => {
     routes.forEach((route) => router.addRoute('main', route))
   }
 
-  function login() {
+  function login(formData: IFormData) {
     return new Promise((resolve, reject) => {
       try {
-        localCache.setCache('token', 99999)
-        localCache.setCache('userInfo', {
-          name: 'korea',
-          age: 20
-        })
+        localCache.setCache('token', createUniqueString())
+        localCache.setCache('userInfo', formData)
         // 暂时写法
         localCache.setCache('userMenus', getTempRoutes())
         mapUserMenusToRouter(getTempRoutes())

@@ -4,6 +4,7 @@ import router from './router'
 
 import 'normalize.css'
 import 'normalize.css'
+import './index.css'
 import registerPinia from './store'
 import globalRegister from './global'
 
