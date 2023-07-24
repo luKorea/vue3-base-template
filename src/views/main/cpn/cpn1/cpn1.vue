@@ -3,6 +3,7 @@
     <el-space>
       <el-tag @click="handleNewData">侧边弹框表单</el-tag>
       <el-tag @click="handleNewDialogData">弹框表单</el-tag>
+      <el-tag>插件使用: {{ $translate('greetings.hello') }}</el-tag>
     </el-space>
     <el-divider />
     <div>

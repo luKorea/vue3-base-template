@@ -6,13 +6,13 @@ import 'normalize.css'
 import 'normalize.css'
 import './index.css'
 import registerPinia from './store'
+import registerPlugins from './plugins'
 import globalRegister from './global'
 
 const app = createApp(App)
-console.log(app.version, 'version')
-console.log(app.config, 'config')
 
 globalRegister(app)
+registerPlugins(app)
 registerPinia(app)
 
 app.use(router)
