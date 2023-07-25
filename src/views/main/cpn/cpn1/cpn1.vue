@@ -1,7 +1,7 @@
 <template>
   <page-content-layout>
     <el-space>
-      <el-tag @click="handleNewData">侧边弹框表单</el-tag>
+      <el-tag @click="openModal">侧边弹框表单</el-tag>
       <el-tag @click="handleNewDialogData">弹框表单</el-tag>
       <el-tag>插件使用: {{ $translate('greetings.hello') }}</el-tag>
     </el-space>
@@ -47,6 +47,7 @@ import { usePageModal, usePageDialog } from '@/hooks'
 import { modalConfig } from './config/modal.config'
 import { useStoreName } from './hooks/use-page-list'
 import HyEditor from '@/base-ui/editor'
+import http from '@/service'
 
 const { pageModalRef, defaultInfo, handleNewData } = usePageModal()
 const {
@@ -57,6 +58,13 @@ const {
 const { operationName } = useStoreName()
 const otherInfo = reactive<any>({})
 const editorValue = ref<string>('扩展表单区域')
+
+async function openModal() {
+  handleNewData({})
+  const res = await http.get({
+    url: '/home/goodprice'
+  })
+}
 </script>
 
 <style scoped></style>

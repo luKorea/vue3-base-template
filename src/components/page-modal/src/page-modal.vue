@@ -44,23 +44,26 @@
         </div>
       </template>
       <template #default>
-        <slot
-          name="titleWrapper"
-          :row="{
-            data: formData,
-            ref: pageFormRef
-          }"
-        ></slot>
-        <hy-form
-          ref="pageFormRef"
-          v-bind="modalConfig"
-          @submit="getFormData"
-          @changeSelect="handleChangeSelect"
-          @remoteMethod="handleRemoteMethod"
-          @uploadData="getUploadData"
-        >
-        </hy-form>
-        <slot></slot>
+        <HySkeleton v-if="state.loading" :loading="state.loading"></HySkeleton>
+        <template v-else>
+          <slot
+            name="titleWrapper"
+            :row="{
+              data: formData,
+              ref: pageFormRef
+            }"
+          ></slot>
+          <hy-form
+            ref="pageFormRef"
+            v-bind="modalConfig"
+            @submit="getFormData"
+            @changeSelect="handleChangeSelect"
+            @remoteMethod="handleRemoteMethod"
+            @uploadData="getUploadData"
+          >
+          </hy-form>
+          <slot></slot>
+        </template>
       </template>
     </el-drawer>
   </div>
@@ -72,6 +75,8 @@ import { successTip, errorTip } from '@/utils/tip-info'
 
 import HyForm from '@/base-ui/form'
 import md5 from 'md5'
+import useMainHooks from '@/hooks/use-main'
+import HySkeleton from '@/base-ui/skeleton'
 
 interface IOperationName {
   editName: string
@@ -126,6 +131,7 @@ const emit = defineEmits([
   'uploadData',
   'otherOptions'
 ])
+const { state } = useMainHooks()
 const dialogVisible = ref(false)
 const btnLoading = ref(false)
 // 获取表单组件，监听表单是否填写完整

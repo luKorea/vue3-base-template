@@ -1,5 +1,8 @@
 <template>
-  <el-card class="box-card" shadow="always">
+  <el-card v-if="state.loading">
+    <HySkeleton :loading="state.loading"></HySkeleton>
+  </el-card>
+  <el-card v-else class="box-card" shadow="always">
     <template #header>
       <div class="card-header">
         <Hy-breadcrumb :breadcrumbs="breadcrumbs"></Hy-breadcrumb>
@@ -21,7 +24,10 @@ import { pathMapBreadcrumbs } from '@/utils/map-menus'
 import userStore from '@/store/module/user'
 import { storeToRefs } from 'pinia'
 import HyBreadcrumb from '@/base-ui/breadcrumb'
+import HySkeleton from '@/base-ui/skeleton/index'
+import useMainHooks from '@/hooks/use-main'
 
+const { state } = useMainHooks()
 const store = userStore()
 const { initState } = storeToRefs(store)
 
@@ -31,7 +37,6 @@ const breadcrumbs = computed(() => {
   return pathMapBreadcrumbs(initState.value.userMenus, currentPath)
 })
 
-console.log(breadcrumbs.value)
 defineOptions({
   name: 'PageContentLayout'
 })

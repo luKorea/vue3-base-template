@@ -16,19 +16,12 @@
         </el-header>
         <!-- <nav-tags></nav-tags> -->
         <el-main class="page-content">
-          <!-- <transition
-            appear
-            appear-active-class="animate__animated animate__pulse"
-            enter-active-class="animate__animated animate__fadeIn"
-            name="fade"
-          > -->
           <router-view v-slot="{ Component }">
             <keep-alive v-if="$route.meta.cache">
               <component :is="Component"></component>
             </keep-alive>
             <component :is="Component" v-else></component>
           </router-view>
-          <!-- </transition> -->
         </el-main>
       </el-container>
     </el-container>
@@ -36,12 +29,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import NavMenu from '@/components/nav-menu'
 import NavHeader from '@/components/nav-header'
 import NavTags from '@/components/nav-tags'
 
 import defaultSetting from '@/settings'
+
+import http from '@/service'
+
+onMounted(async () => {
+  const res = await http.get({
+    url: '/home/goodprice'
+  })
+  console.log(res)
+})
 
 const isCollapse = ref(false)
 const handleFoldChange = (isFold: boolean) => {

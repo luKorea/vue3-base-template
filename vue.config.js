@@ -10,13 +10,13 @@ const defaultSetting = require('./src/settings')
 module.exports = defineConfig({
   devServer: {
     hot: true,
-    open: true,
-    proxy: {
-      '^/api': {
-        target: 'https://tcms.pofiart.com',
-        changeOrigin: true
-      }
-    }
+    open: true
+    // proxy: {
+    //   '^/api': {
+    //     target: 'http://codercba.com:1888/airbnb/',
+    //     changeOrigin: true
+    //   }
+    // }
   },
   transpileDependencies: true,
   chainWebpack: (config) => {
@@ -27,6 +27,8 @@ module.exports = defineConfig({
   },
   configureWebpack: {
     plugins: [
+      // 自动按需导入 element-plus 样式
+      require('unplugin-element-plus/webpack')({}),
       AutoImport({
         resolvers: [
           ElementPlusResolver(),
