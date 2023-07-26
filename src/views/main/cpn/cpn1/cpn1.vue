@@ -56,7 +56,7 @@ const {
   handleNewData: handleNewDialogData
 } = usePageDialog()
 const { operationName } = useStoreName()
-const otherInfo = reactive<any>({})
+const otherInfo = reactive({})
 const editorValue = ref<string>('扩展表单区域')
 
 async function openModal() {
