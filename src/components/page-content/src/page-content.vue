@@ -33,7 +33,7 @@
         </el-button>
         <el-button
           v-if="permissionList.isRefresh"
-          icon="el-icon-refresh"
+          icon="Refresh"
           @click="handleRefreshClick"
         ></el-button>
       </template>
@@ -224,4 +224,8 @@ const handleDistributionClick = (item: any) =>
   emit('distributionBtnClick', item)
 const handleOperationClick = (item: any) => emit('operationBtnClick', item)
 const handleChangePicker = (item: any) => emit('changePicker', item)
+
+defineExpose({
+  getPageData
+})
 </script>

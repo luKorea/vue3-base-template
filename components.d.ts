@@ -57,6 +57,7 @@ declare module 'vue' {
     PageDialog: typeof import('./src/components/page-dialog/src/page-dialog.vue')['default']
     PageForm: typeof import('./src/components/page-form/src/page-form.vue')['default']
     PageModal: typeof import('./src/components/page-modal/src/page-modal.vue')['default']
+    PageSearch: typeof import('./src/components/page-search/src/page-search.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

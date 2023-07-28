@@ -379,10 +379,13 @@ watch(formData, (newVal) => {
   emit('submit', newVal)
 })
 
-function initFormData() {
+function initFormData(isReset = false) {
   for (const item of props.formItems) {
     if (item.type === 'checkbox') {
       formData[item.field] = []
+    }
+    if (isReset) {
+      formData[`${item.field}`] = item.defaultValue ?? ''
     }
     formData[`${item.field}`] = item.defaultValue ?? formData[`${item.field}`]
   }
@@ -432,7 +435,8 @@ const handleUploadData = (data: any, filed: string) => {
 
 defineExpose({
   formRef,
-  validateForm
+  validateForm,
+  initFormData
 })
 </script>
 
