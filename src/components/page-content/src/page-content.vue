@@ -27,14 +27,12 @@
         <el-button
           v-if="permissionList.isCreate"
           type="primary"
-          size="mini"
           @click="handleNewClick"
         >
           新建数据
         </el-button>
         <el-button
           v-if="permissionList.isRefresh"
-          size="mini"
           icon="el-icon-refresh"
           @click="handleRefreshClick"
         ></el-button>
@@ -42,11 +40,7 @@
 
       <!-- 2.列中的插槽 -->
       <template #status="scope">
-        <el-button
-          plain
-          size="mini"
-          :type="scope.row.enable ? 'success' : 'danger'"
-        >
+        <el-button plain :type="scope.row.enable ? 'success' : 'danger'">
           {{ scope.row.enable ? '启用' : '禁用' }}
         </el-button>
       </template>
@@ -72,7 +66,6 @@
         <slot name="otherTableHandler" :row="scope.row"></slot>
         <el-button
           v-if="permissionList.isUpdate"
-          size="mini"
           type="text"
           @click="handleEditClick(scope.row)"
         >
@@ -80,7 +73,6 @@
         </el-button>
         <el-button
           v-if="permissionList.isDelete"
-          size="mini"
           type="text"
           style="color: #f56c6c; margin-right: 4px"
           @click="handleDeleteClick(scope.row)"
@@ -97,6 +89,10 @@ import { computed, reactive, ref, watch } from 'vue'
 import HyTable from '@/base-ui/table'
 import { PermissionType } from '@/types/permission'
 import { infoTipBox, successTip, errorTip } from '@/utils/tip-info'
+import { storeToRefs } from 'pinia'
+
+import { storeList } from '@/store'
+import { IDefaultStoreStructure } from '@/store/types'
 
 interface IProps {
   defaultSearchValue: any
@@ -105,19 +101,11 @@ interface IProps {
   showSearch: boolean
   contentTableConfig: any
   pageName: string
-  storeTypeInfo: any
 }
 const props = withDefaults(defineProps<IProps>(), {
   editTableDraw: false,
   showHeader: true,
-  showSearch: false,
-  storeTypeInfo: () => ({
-    actionName: 'system/getPageListAction',
-    actionListName: 'system/pageListData',
-    actionCountName: 'system/pageListCount',
-    deleteAction: 'system/deletePageDataAction',
-    sortAction: 'system/sortPageDataAction'
-  })
+  showSearch: false
 })
 const emit = defineEmits([
   'drawBtnClick',
@@ -133,7 +121,14 @@ const emit = defineEmits([
 ])
 
 // TODO page-content 映射表格数据
-const store = ref()
+let store: any
+try {
+  store = storeList[props.pageName]()
+} catch (err) {
+  console.error('请确保输入的名称有对应的 store')
+}
+
+const { pageListCount, pageListData } = storeToRefs(store)
 const userSelectData = ref([])
 const tableRef = ref()
 // 0.获取操作的权限
@@ -175,29 +170,18 @@ const getPageData = (queryInfo: any = {}) => {
     ...queryInfo
   }
   if (!permissionList.isQuery) return
-  store.value.dispatch(props.storeTypeInfo?.actionName, {
-    pageName: props.pageName,
-    queryInfo: {
-      currentPage: pageInfo.value.currentPage,
-      pageSize: pageInfo.value.pageSize,
-      // currentPage: pageInfo.value.currentPage * pageInfo.value.pageSize, //使用偏移量
-      ...backQueryInfo.value,
-      ...props.defaultSearchValue
-    }
+  store.getPageListData({
+    currentPage: pageInfo.value.currentPage,
+    pageSize: pageInfo.value.pageSize,
+    // currentPage: pageInfo.value.currentPage * pageInfo.value.pageSize, //使用偏移量
+    ...backQueryInfo.value,
+    ...props.defaultSearchValue
   })
 }
-// watchEffect(() => getPageData())
 getPageData()
-let dataList = computed(() => {
-  return store.value.getters[props?.storeTypeInfo?.actionListName](
-    props.pageName
-  )
-})
-const dataCount = computed(() => {
-  return store.value.getters[props?.storeTypeInfo?.actionCountName](
-    props.pageName
-  )
-})
+// 完善 pinia 写法
+let dataList = computed(() => pageListData.value(props.pageName))
+const dataCount = computed(() => pageListCount.value(props.pageName))
 
 // 4.获取其他的动态插槽名称
 const otherPropSlots = props.contentTableConfig?.propList.filter(
@@ -216,28 +200,17 @@ const handleDeleteClick = (item: any) => {
     message: `您确定删除当前ID为${item.id}的数据吗`,
     title: '删除数据'
   })
-    .then(() => {
-      console.log(item)
-      store.value.dispatch(props.storeTypeInfo.deleteAction, {
-        pageName: props.pageName,
-        queryInfo: item
-      })
-    })
+    .then(store.deletePageDataAction(item))
     .catch(() => console.log('用户取消操作'))
 }
 // 拖动表格
-const drawTable = (data: any) => {
-  store.value
-    .dispatch(props.storeTypeInfo.sortAction, {
-      pageName: props.pageName,
-      sortData: {
-        data: JSON.stringify(data)
-      }
-    })
-    .then((res: any) => {
-      successTip(res)
-    })
-    .catch((err: any) => errorTip(err))
+const drawTable = async (data: any) => {
+  try {
+    const res = await store.sortPageDataAction(data)
+    successTip(res)
+  } catch (error: any) {
+    errorTip(error)
+  }
 }
 const handleExportClick = () => emit('exportBtnClick')
 const handleSelectAllClick = () => emit('selectAllBtnClick', userSelectData)

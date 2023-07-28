@@ -77,6 +77,8 @@ import HyForm from '@/base-ui/form'
 import md5 from 'md5'
 import useMainHooks from '@/hooks/use-main'
 import HySkeleton from '@/base-ui/skeleton'
+import { storeList } from '@/store'
+import { IDefaultStoreStructure } from '@/store/types'
 
 interface IOperationName {
   editName: string
@@ -103,10 +105,6 @@ const props = withDefaults(defineProps<IProps>(), {
   modalConfig: () => ({}),
   defaultInfo: () => ({}),
   otherInfo: () => ({}),
-  operationName: () => ({
-    editName: 'system/editPageDataAction',
-    createName: 'system/createPageDataAction'
-  }),
   btnOperation: () => ({
     showCancelBtn: true,
     showConfirmBtn: true,
@@ -142,7 +140,12 @@ function getFormData(newValue: any) {
 }
 // 点击确定按钮的逻辑
 // TODO page-form store 处理
-const store = ref()
+let store: IDefaultStoreStructure
+try {
+  store = storeList[props.pageName]()
+} catch (err) {
+  console.error('请确保输入的名称有对应的 store')
+}
 const handleConfirmClick = async () => {
   if (pageFormRef.value) {
     try {
@@ -154,13 +157,10 @@ const handleConfirmClick = async () => {
       // 编辑
       if (props.defaultInfo.isEdit && Object.keys(props.defaultInfo).length) {
         try {
-          const res = await store.value.dispatch(props.operationName.editName, {
-            pageName: props.pageName,
-            editData: {
-              ...props.defaultInfo,
-              ...formData,
-              ...props.otherInfo
-            }
+          const res = await store.editPageDataAction({
+            ...props.defaultInfo,
+            ...formData,
+            ...props.otherInfo
           })
           successTip('操作成功')
           btnLoading.value = false
@@ -179,17 +179,11 @@ const handleConfirmClick = async () => {
       } else {
         // 新建
         try {
-          const res = await store.value.dispatch(
-            props.operationName.createName,
-            {
-              pageName: props.pageName,
-              newData: {
-                ...formData,
-                ...props.otherInfo,
-                ...props.defaultInfo
-              }
-            }
-          )
+          const res = await store.createPageDataAction({
+            ...formData,
+            ...props.otherInfo,
+            ...props.defaultInfo
+          })
           successTip('操作成功')
           btnLoading.value = false
           // 如果hideDialog为false, 关闭当前页面, 做其他操作

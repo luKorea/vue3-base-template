@@ -21,7 +21,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { pathMapBreadcrumbs } from '@/utils/map-menus'
-import userStore from '@/store/module/user'
+import userStore from '@/store/module/user/user'
 import { storeToRefs } from 'pinia'
 import HyBreadcrumb from '@/base-ui/breadcrumb'
 import HySkeleton from '@/base-ui/skeleton/index'
@@ -68,3 +68,4 @@ defineOptions({
   justify-content: space-between;
 }
 </style>
+@/store/module/user/user

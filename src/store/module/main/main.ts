@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { MAIN_KEY } from '../../types'
 
 /**
  * @description 使用 hooks 写法
@@ -7,7 +8,7 @@ import { ref } from 'vue'
  * 2. function 就是 actions
  * 3. computed 就是 getters
  */
-const useMainStore = defineStore('main', () => {
+const useMainStore = defineStore(MAIN_KEY, () => {
   const state = ref({
     loading: false
   })

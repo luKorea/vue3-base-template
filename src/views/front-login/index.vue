@@ -82,12 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import userStore from '@/store/module/user'
+import userStore from '@/store/module/user/user'
 import { ElForm } from 'element-plus'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { IFormData } from '@/store/module/user'
+import type { IFormData } from '@/store/module/user/user'
 
 const router = useRouter()
 const user = userStore()
@@ -216,3 +216,4 @@ function handleLogin() {
   }
 }
 </style>
+@/store/module/user/user@/store/module/user/user

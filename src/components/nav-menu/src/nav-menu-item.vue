@@ -30,6 +30,10 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
+defineOptions({
+  name: 'nav-menu-item'
+})
+
 interface IProps {
   defaultValue: string
   menuList: any[]

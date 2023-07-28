@@ -29,17 +29,22 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 按下 后退/前进 按钮
+    if (savedPosition) return savedPosition
+    return {
+      top: 0,
+      behavior: 'smooth'
+    }
+  }
 })
 
 // 导航守卫
 router.beforeEach((to) => {
-  if (to.path !== '/login') {
-    // 当前系统是否登录，目前不适用
-    const token = localCache.getCache('token')
-    if (!token) {
-      return '/login'
-    }
+  const token = localCache.getCache('token')
+  if (to.path !== '/login' && !token) {
+    return '/login'
   }
   // 重定向页面
   if (to.path === '/main') {

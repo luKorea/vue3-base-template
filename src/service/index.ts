@@ -1,7 +1,7 @@
 import { localCache } from '@/utils/localCache'
 import { BASE_URL, TIME_OUT } from './config'
 import HttpRequest from './request'
-import useMainStore from '@/store/module/main'
+import useMainStore from '@/store/module/main/main'
 
 import { ElLoading } from 'element-plus'
 import { HttpRequestConfig } from './request/type'
@@ -47,7 +47,7 @@ const http = new HttpRequest({
       setTimeout(() => {
         loadingInstance && hideLoading()
         useMain.hideLoading()
-      }, 2000)
+      }, 100)
       return res
     }
   }

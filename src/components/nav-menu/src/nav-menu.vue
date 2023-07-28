@@ -25,7 +25,7 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { pathMapToMenu } from '@/utils/map-menus'
-import userStore from '@/store/module/user'
+import userStore from '@/store/module/user/user'
 import { storeToRefs } from 'pinia'
 import navMenuItem from './nav-menu-item.vue'
 
@@ -128,3 +128,4 @@ const setExpandRow = (handleTreeData: any) => {
   }
 }
 </style>
+@/store/module/user/user

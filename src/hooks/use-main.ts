@@ -1,4 +1,4 @@
-import useMainStore from '@/store/module/main'
+import useMainStore from '@/store/module/main/main'
 import { storeToRefs } from 'pinia'
 
 export default function useMainHooks() {

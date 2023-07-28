@@ -15,9 +15,8 @@
   <page-modal
     ref="pageModalRef"
     :default-info="defaultInfo"
-    page-name="questions"
+    page-name="help"
     :modal-config="modalConfig"
-    :operation-name="operationName"
     :other-info="otherInfo"
   >
     <template #titleWrapper>
@@ -30,8 +29,6 @@
     :default-info="dialogDefaultInfo"
     page-name="questions"
     :modal-config="modalConfig"
-    :operation-name="operationName"
-    :other-info="otherInfo"
   >
     <template #titleWrapper>
       <el-tag type="success">扩展头部区域</el-tag>
@@ -45,7 +42,6 @@ import { reactive, ref, watchEffect } from 'vue'
 import { usePageModal, usePageDialog } from '@/hooks'
 
 import { modalConfig } from './config/modal.config'
-import { useStoreName } from './hooks/use-page-list'
 import HyEditor from '@/base-ui/editor'
 import http from '@/service'
 
@@ -55,7 +51,6 @@ const {
   defaultInfo: dialogDefaultInfo,
   handleNewData: handleNewDialogData
 } = usePageDialog()
-const { operationName } = useStoreName()
 const otherInfo = reactive({})
 const editorValue = ref<string>('扩展表单区域')
 
