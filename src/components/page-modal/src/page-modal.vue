@@ -227,7 +227,7 @@ defineExpose({
     margin-bottom: 0 !important;
     box-sizing: border-box;
     border-bottom: 1px solid #dcdfe6;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px 0px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 12px 0;
     padding: 10px 20px;
   }
   .modal-title {
