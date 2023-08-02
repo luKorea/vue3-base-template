@@ -82,7 +82,6 @@ const uploadProgress = ref(0)
 const dialogVisible = ref(false)
 const dialogImageUrl = ref('')
 const customUpload = async (file: File) => {
-  console.log(file, 'file')
   uploading.value = true
   // Simulate file upload process
   const uploadDelay = 100
