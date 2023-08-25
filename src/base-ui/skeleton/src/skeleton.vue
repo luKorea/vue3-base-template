@@ -1,22 +1,12 @@
 <template>
-  <div
-    v-if="loading"
-    :class="['ant-skeleton-paragraph', className]"
-    :style="style"
-  >
-    <div
-      v-for="(_, index) of rows"
-      :key="index"
-      :class="[
-        'ant-skeleton-paragraph-row',
-        animate ? 'ant-skeleton-paragraph-animate  animate' : 'no-animate'
-      ]"
-    ></div>
+  <div v-if="loading" :class="parentClass" :style="style">
+    <div v-for="(_, index) of rows" :key="index" :class="childrenClass"></div>
   </div>
-  <slot a:else />
+  <slot v-else />
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 interface IProps {
   className?: string
   loading: boolean
@@ -25,7 +15,7 @@ interface IProps {
   animate?: boolean
 }
 
-withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<IProps>(), {
   className: '',
   rows: 20,
   style: {},
@@ -33,6 +23,12 @@ withDefaults(defineProps<IProps>(), {
 })
 
 defineEmits(['update:loading'])
+
+const parentClass = computed(() => ['ant-skeleton-paragraph', props.className])
+const childrenClass = computed(() => [
+  'ant-skeleton-paragraph-row',
+  props.animate ? 'ant-skeleton-paragraph-animate  animate' : 'no-animate'
+])
 </script>
 
 <style scoped lang="less">
